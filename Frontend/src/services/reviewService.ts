@@ -1,22 +1,62 @@
 import { BookReview } from "@/types";
+import axios from 'axios';
 
 
-export const addReview = (newReview: BookReview) => {
 
+/* Set up the axios instance with the backend API base URL */
+const api = axios.create({
+    baseURL: 'https://localhost:8000/',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
+
+export const addReview = async (newReview: BookReview) => {
+    try {
+        const response = await api.post('/reviews', newReview);
+        return response.data;
+    } catch (error) {
+        console.error('Error adding review:', error);
+        throw error;
+    }
 };
 
-export const getReviews = () => {
-
+export const getReviews = async () => {
+    try {
+        const response = await api.get('/reviews');
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching reviews:', error);
+        throw error;
+    }
 };
 
-export const getReview = (id: number) => {
-
-}
-
-export const updateReview = (updatedReview: BookReview) => {
-
+export const getReview = async (id: number) => {
+    try {
+        const response = await api.get(`/reviews/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error(`Error fetching review with id ${id}:`, error);
+        throw error;
+    }
 };
 
-export const deleteReview = (id: number) => {
+export const updateReview = async (updatedReview: BookReview) => {
+    try {
+        const response = await api.put(`/reviews/${updatedReview.id}`, updatedReview);
+        return response.data;
+    } catch (error) {
+        console.error('Error updating review:', error);
+        throw error;
+    }
+};
 
+export const deleteReview = async (id: number) => {
+    try {
+        const response = await api.delete(`/reviews/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error(`Error deleting review with id ${id}:`, error);
+        throw error;
+    }
 };

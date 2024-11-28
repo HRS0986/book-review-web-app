@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { BookReview } from "@/types";
 import ReviewCard from "@/components/reviewCard.tsx";
 import ReviewForm from "@/components/reviewForm.tsx";
+import { addReview, getReviews } from "@/services/reviewService.ts";
 
 const BookReviewApp: React.FC = () => {
     const [reviews, setReviews] = useState<BookReview[]>([]);
@@ -18,17 +19,18 @@ const BookReviewApp: React.FC = () => {
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
     // CRUD Operations
-    const addReview = (newReview: BookReview) => {
-        const reviewWithId = {...newReview, id: Date.now().toString()};
-        setReviews([...reviews, reviewWithId]);
+    const onAddReview = (newReview: BookReview) => {
+        addReview(newReview).then((_) => {
+
+        })
     };
 
     const updateReview = (updatedReview: BookReview) => {
-        setReviews(reviews.map(r => r.id === updatedReview.id ? updatedReview : r));
+
     };
 
     const deleteReview = (id: string) => {
-        setReviews(reviews.filter(r => r.id !== id));
+
     };
 
     const onCloseModal = () => {
@@ -39,6 +41,12 @@ const BookReviewApp: React.FC = () => {
         setSelectedReview(review);
         setIsFormModalOpen(true);
     }
+
+    useEffect(() => {
+        getReviews().then((data) => {
+            setReviews(data);
+        })
+    }, [reviews]);
 
     // Filtering and Sorting
     useEffect(() => {
@@ -65,17 +73,17 @@ const BookReviewApp: React.FC = () => {
     }, [reviews, searchTerm, sortBy, sortOrder]);
 
     return (
-        <div className="container mx-auto p-4">
-            <h1 className="text-3xl font-bold mb-6">Book Reviews</h1>
+        <div className="container mx-auto p-4 px-60 pt-10">
+            <h1 className="text-8xl font-bold mb-6 mx-auto w-fit pb-5">REVIEWS HUB</h1>
 
             {/* Toolbar */}
-            <div className="space-y-4 sm:space-y-0 sm:flex sm:flex-wrap sm:items-center sm:gap-4 mb-4">
+            <div className="space-y-4 sm:space-y-0 sm:flex sm:flex-wrap sm:items-center sm:gap-4 mb-4 bg-gray-100 rounded-md p-5">
                 <div className="md:w-1/2 w-full flex-grow relative">
                     <Input
                         placeholder="Search books or authors"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full pr-10"
+                        className="w-full pr-10 bg-white"
                     />
                     {searchTerm && (
                         <button
@@ -94,7 +102,7 @@ const BookReviewApp: React.FC = () => {
                         value={sortBy}
                         onValueChange={(value: 'date' | 'rating') => setSortBy(value)}
                     >
-                        <SelectTrigger className="w-full sm:w-[180px]">
+                        <SelectTrigger className="w-full sm:w-[180px] bg-white">
                             <SelectValue placeholder="Sort By"/>
                         </SelectTrigger>
                         <SelectContent>
@@ -136,7 +144,7 @@ const BookReviewApp: React.FC = () => {
                             <ReviewForm
                                 onCloseModal={onCloseModal}
                                 review={selectedReview || undefined}
-                                onSubmit={selectedReview ? updateReview : addReview}
+                                onSubmit={selectedReview ? updateReview : onAddReview}
                             />
                         </DialogContent>
                     </Dialog>

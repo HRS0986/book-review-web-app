@@ -111,6 +111,7 @@ const ReviewForm: React.FC<{
                     className="w-full p-2 border rounded"
                     placeholder="Your Review"
                     value={formData.review}
+                    rows={5}
                     onChange={(e) => setFormData({ ...formData, review: e.target.value })}
                 />
                 {errors.review && <p className="text-red-500 text-sm">{errors.review}</p>}
