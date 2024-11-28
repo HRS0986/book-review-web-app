@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel
@@ -14,3 +15,4 @@ class ReviewResponse(BaseModel):
     author: str
     rating: int
     review: str
+    date_added: datetime
