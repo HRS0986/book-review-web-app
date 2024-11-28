@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book Review</title>
+    <style>
+      .app-background {
+        background-image: url('./src/assets/bg.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed; /* Keeps the background image stationary during scrolling */
+        height: 100vh;
+        background-color: rgba(255, 255, 255, 0.7); /* Adjustable white overlay */
+        background-blend-mode: overlay; /* Blends the image with the color overlay */
+      }
+    </style>
+  </head>
+  <body class="app-background">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
