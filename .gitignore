@@ -2,3 +2,4 @@
 .code
 Backend/venv
 Frontend/node_modules
+Frontend/.vite

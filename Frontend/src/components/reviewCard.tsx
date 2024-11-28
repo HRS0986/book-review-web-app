@@ -109,18 +109,26 @@ const ReviewCard: React.FC<{
                 </div>
             </CardContent>
             <Dialog open={isConfirmModalOpen} onOpenChange={setIsConfirmModalOpen}>
-                <DialogContent>
+                <DialogContent className="w-[95%] max-w-md mx-auto">
                     <DialogHeader>
                         <DialogTitle>Confirm Deletion</DialogTitle>
                     </DialogHeader>
-                    <p>{UserMessages.CONFIRM_DELETE_REVIEW}</p>
-                    <DialogFooter>
-                        <Button variant="outline" onClick={() => setIsConfirmModalOpen(false)}>
-                            <X className="h-4 w-4"></X>
+                    <p className="text-sm text-muted-foreground">{UserMessages.CONFIRM_DELETE_REVIEW}</p>
+                    <DialogFooter className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                        <Button
+                            variant="outline"
+                            onClick={() => setIsConfirmModalOpen(false)}
+                            className="w-full sm:w-auto"
+                        >
+                            <X className="mr-2 h-4 w-4"/>
                             Cancel
                         </Button>
-                        <Button variant="destructive" onClick={handleDelete}>
-                            <Trash className="h-4 w-4"></Trash>
+                        <Button
+                            variant="destructive"
+                            onClick={handleDelete}
+                            className="w-full sm:w-auto"
+                        >
+                            <Trash className="mr-2 h-4 w-4"/>
                             Delete
                         </Button>
                     </DialogFooter>

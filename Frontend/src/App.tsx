@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowUpDown, NotebookPen, X } from 'lucide-react';
+import { NotebookPen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { BookReview } from "@/types";
@@ -18,13 +17,13 @@ const BookReviewApp: React.FC = () => {
     const [filteredReviews, setFilteredReviews] = useState<BookReview[]>([]);
     const [selectedReview, setSelectedReview] = useState<BookReview | null>(null);
     const [isFormModalOpen, setIsFormModalOpen] = useState(false);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [sortBy, setSortBy] = useState<'date' | 'rating'>('date');
-    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
     const [isLoading, setIsLoading] = useState(true);
+    const [searchRating, setSearchRating] = useState<number | null>(null);
+    const [sortByDate, setSortByDate] = useState<'newest' | 'oldest'>('newest');
+
 
     const onAddReview = (newReview: BookReview) => {
-        addReview(newReview).then((_) => {
+        addReview(newReview).then(() => {
             toast({
                 title: "Success",
                 description: UserMessages.REVIEW_ADDED,
@@ -35,7 +34,7 @@ const BookReviewApp: React.FC = () => {
             getReviews().then((data) => {
                 setReviews(data);
             })
-        }).catch(_ => {
+        }).catch(() => {
             toast({
                 title: "Failed",
                 description: UserMessages.ERROR_ADDING_REVIEW,
@@ -47,7 +46,7 @@ const BookReviewApp: React.FC = () => {
     };
 
     const onUpdateReview = (updatedReview: BookReview) => {
-        updateReview(updatedReview).then((_) => {
+        updateReview(updatedReview).then(() => {
             toast({
                 title: "Success",
                 description: UserMessages.REVIEW_UPDATED,
@@ -58,7 +57,7 @@ const BookReviewApp: React.FC = () => {
             getReviews().then((data) => {
                 setReviews(data);
             })
-        }).catch(_ => {
+        }).catch(() => {
             toast({
                 title: "Failed",
                 description: UserMessages.ERROR_UPDATING_REVIEW,
@@ -70,7 +69,7 @@ const BookReviewApp: React.FC = () => {
     };
 
     const onDeleteReview = (id: string) => {
-        deleteReview(+id).then((_) => {
+        deleteReview(+id).then(() => {
             toast({
                 title: "Success",
                 description: UserMessages.REVIEW_DELETED,
@@ -81,7 +80,7 @@ const BookReviewApp: React.FC = () => {
             getReviews().then((data) => {
                 setReviews(data);
             })
-        }).catch(_ => {
+        }).catch(() => {
             toast({
                 title: "Failed",
                 description: UserMessages.ERROR_DELETING_REVIEW,
@@ -105,7 +104,7 @@ const BookReviewApp: React.FC = () => {
         getReviews().then((data) => {
             setReviews(data);
             setIsLoading(false);
-        }).catch(_ => {
+        }).catch(() => {
             toast({
                 title: "Error",
                 description: UserMessages.ERROR_FETCHING_REVIEWS,
@@ -119,96 +118,94 @@ const BookReviewApp: React.FC = () => {
     // Filtering and Sorting
     useEffect(() => {
         let result = [...reviews];
-
-        if (searchTerm) {
-            result = result.filter(review =>
-                review.book_title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                review.author.toLowerCase().includes(searchTerm.toLowerCase())
-            );
+        console.log(searchRating)
+        if (searchRating !== null && searchRating !== 0) {
+            result = result.filter(review => review.rating === searchRating);
+        } else if (searchRating === 0) {
+            result = reviews;
         }
 
         result.sort((a, b) => {
-            const multiplier = sortOrder === 'asc' ? 1 : -1;
-            if (sortBy === 'date') {
-                return multiplier * (new Date(a.date_added).getTime() - new Date(b.date_added).getTime());
-            }
-            return multiplier * (a.rating - b.rating);
+            const multiplier = sortByDate === 'newest' ? -1 : 1;
+            return multiplier * (new Date(a.date_added).getTime() - new Date(b.date_added).getTime());
         });
 
         setFilteredReviews(result);
-    }, [reviews, searchTerm, sortBy, sortOrder]);
+    }, [reviews, searchRating, sortByDate]);
+
 
     return (
         <div className="min-h-screen">
-            <div className="container mx-auto px-4 md:px-8 lg:px-16 xl:px-32">
-                <div className="header-toolbar sticky top-0 z-50 bg-white backdrop-blur-md rounded-md mb-5">
-                    <h1 className="text-4xl md:text-6xl lg:text-8xl font-bold mb-6 text-center">
+            <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-16 xl:px-32">
+                <div
+                    className="header-toolbar sticky top-0 z-50 bg-white/90 backdrop-blur-md rounded-lg shadow-sm mb-5">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-center text-gray-800 tracking-tight">
                         {UserMessages.APP_TITLE}
                     </h1>
 
                     {/* Toolbar */}
-                    <div className="bg-gray-100 rounded-b-md p-4 md:p-5 mb-6">
-                        <div className="flex flex-col md:flex-row gap-4 items-center">
-                            <div className="w-full md:flex-grow relative">
-                                <Input
-                                    placeholder="Search books or authors"
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="w-full pr-10 bg-white"
-                                />
-                                {searchTerm && (
-                                    <button
-                                        type="button"
-                                        onClick={() => setSearchTerm('')}
-                                        className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                                    >
-                                        <X className="w-4 h-4"/>
-                                    </button>
-                                )}
-                            </div>
-
-                            {/* Sorting and Add Review Controls */}
-                            <div
-                                className="w-full md:w-auto flex flex-col sm:flex-row gap-2 justify-between items-center">
-                                <div className="flex gap-2 w-full">
+                    <div className="bg-gray-50 rounded-b-lg p-4 md:p-5 mb-4">
+                        <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
+                            {/* Rating and Date Filters */}
+                            <div className="flex flex-col sm:flex-row gap-3 w-full items-center">
+                                {/* Rating Filter - More Responsive */}
+                                <div className="flex items-center w-full sm:w-auto gap-2">
+                                    <span className="text-sm text-gray-600 whitespace-nowrap">Rating:</span>
                                     <Select
-                                        value={sortBy}
-                                        onValueChange={(value: 'date' | 'rating') => setSortBy(value)}
+                                        value={searchRating?.toString() || '0'}
+                                        onValueChange={(value) => setSearchRating(value ? parseInt(value) : null)}
                                     >
-                                        <SelectTrigger className="w-full sm:w-[150px] bg-white">
-                                            <SelectValue placeholder="Sort By"/>
+                                        <SelectTrigger className="w-[150px] bg-white">
+                                            <SelectValue placeholder="Filter by Rating"/>
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="date">Date Added</SelectItem>
-                                            <SelectItem value="rating">Rating</SelectItem>
+                                            <SelectItem value="0">All Ratings</SelectItem>
+                                            <SelectItem value="1">1 Star</SelectItem>
+                                            <SelectItem value="2">2 Stars</SelectItem>
+                                            <SelectItem value="3">3 Stars</SelectItem>
+                                            <SelectItem value="4">4 Stars</SelectItem>
+                                            <SelectItem value="5">5 Stars</SelectItem>
                                         </SelectContent>
                                     </Select>
-
-                                    <Button
-                                        variant="outline"
-                                        onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                                        className="w-auto sm:w-[150px]"
-                                    >
-                                        <ArrowUpDown className="h-4 w-4 mr-2"/>
-                                        {sortOrder === 'asc' ? 'Ascending' : 'Descending'}
-                                    </Button>
                                 </div>
 
-                                {/* Add Review Popup*/}
+                                {/* Date Sort Filter */}
+                                <div className="flex items-center w-full sm:w-auto gap-2">
+                                    <span className="text-sm text-gray-600 whitespace-nowrap">Date Added:</span>
+                                    <Select
+                                        value={sortByDate}
+                                        onValueChange={(value: 'newest' | 'oldest') => setSortByDate(value)}
+                                    >
+                                        <SelectTrigger className="w-[150px] bg-white">
+                                            <SelectValue placeholder="Sort by Date"/>
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="newest">Newest First</SelectItem>
+                                            <SelectItem value="oldest">Oldest First</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            </div>
+
+                            {/* Add Review Button */}
+                            <div className="w-full sm:w-auto mt-3 md:mt-0 flex justify-center">
                                 <Dialog open={isFormModalOpen} onOpenChange={setIsFormModalOpen}>
                                     <DialogTrigger asChild>
                                         <Button
-                                            className="w-full sm:w-auto mt-2 sm:mt-0"
+                                            className="w-full sm:w-auto flex items-center"
                                             onClick={() => {
                                                 setSelectedReview(null);
                                                 setIsFormModalOpen(true);
                                             }}
                                         >
-                                            <NotebookPen className="h-3 w-3 mr-2"/>
+                                            <NotebookPen className="h-4 w-4 mr-2"/>
                                             Add Review
                                         </Button>
                                     </DialogTrigger>
-                                    <DialogContent onInteractOutside={(event) => event.preventDefault()}>
+                                    <DialogContent
+                                        className="w-[95%] max-w-md rounded-lg"
+                                        onInteractOutside={(event) => event.preventDefault()}
+                                    >
                                         <DialogHeader>
                                             <DialogTitle>
                                                 {selectedReview ? 'Edit Review' : 'Add New Review'}
@@ -224,7 +221,6 @@ const BookReviewApp: React.FC = () => {
                             </div>
                         </div>
                     </div>
-
                 </div>
 
                 {/* Reviews List */}
