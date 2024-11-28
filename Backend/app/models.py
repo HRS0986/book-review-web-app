@@ -1,6 +1,8 @@
 from datetime import datetime
 
 from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy.dialects.mysql import TEXT
+
 
 from .database import Base
 
@@ -10,5 +12,5 @@ class Review(Base):
     rating = Column(Integer, index=True)
     book_title = Column(String(255), index=True)
     author = Column(String(255), index=True)
-    review = Column(String(255), index=True)
+    review = Column(TEXT)
     date_added = Column(DateTime, default=datetime.utcnow)

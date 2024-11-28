@@ -14,8 +14,24 @@ def convert_to_orm(review_schema: Review) -> ReviewEntity:
         review=review_schema.review
     )
 
-def get_reviews(db: Session)  -> List[Type[ReviewEntity]]:
-    return db.query(ReviewEntity).all()
+# def get_reviews(db: Session)  -> List[Type[ReviewEntity]]:
+#     return db.query(ReviewEntity).all()
+
+from sqlalchemy.orm import Session
+from sqlalchemy import func
+from .models import Review
+
+def get_reviews(db: Session) -> List[Type[ReviewEntity]]:
+    result = db.query(
+        Review.id,
+        Review.rating,
+        Review.book_title,
+        Review.author,
+        Review.date_added,
+        func.substring(Review.review, 1, 150).label('review')
+    )
+    return result.all()
+
 
 def create_review(db: Session, review: Review) -> ReviewEntity:
     review = convert_to_orm(review)
@@ -28,7 +44,6 @@ def get_review(db: Session, review_id: int) -> Optional[ReviewEntity]:
     return db.query(ReviewEntity).filter(ReviewEntity.id == review_id).first()
 
 def update_review(db: Session, review_id: int, review: Review) -> Optional[ReviewEntity]:
-    # review = convert_to_orm(review)
     db.query(ReviewEntity).filter(ReviewEntity.id == review_id).update(review.dict())
     db.commit()
     return db.query(ReviewEntity).filter(ReviewEntity.id == review_id).first()

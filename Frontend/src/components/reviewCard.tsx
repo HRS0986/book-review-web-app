@@ -41,13 +41,13 @@ const ReviewCard: React.FC<{
                 </div>
             </CardHeader>
             <CardContent className="flex">
-                <div className="w-3/4">
+                <div className="w-5/6">
                     <p>{review.review}</p>
                     <p className="text-sm text-gray-500 mt-2">
                         Added on: {new Date(review.date_added).toLocaleDateString()}
                     </p>
                 </div>
-                <div className="flex gap-5 w-1/4 justify-end items-end">
+                <div className="flex gap-5 w-1/6 justify-end items-end">
                     <Button
                         variant="ghost"
                         size="icon"

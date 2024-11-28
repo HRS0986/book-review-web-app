@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { BookReview } from "@/types";
 import { Input } from "@/components/ui/input.tsx";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Check, X } from "lucide-react";
+import StarRating from "@/components/starRating.tsx";
 
 const ReviewForm: React.FC<{
     review?: BookReview;
@@ -73,7 +73,7 @@ const ReviewForm: React.FC<{
                 <Input
                     placeholder="Book Title"
                     value={formData.book_title}
-                    onChange={(e) => setFormData({ ...formData, book_title: e.target.value })}
+                    onChange={(e) => setFormData({...formData, book_title: e.target.value})}
                 />
 
                 {errors.book_title && <p className="text-red-500 text-sm">{errors.book_title}</p>}
@@ -83,28 +83,18 @@ const ReviewForm: React.FC<{
                 <Input
                     placeholder="Author"
                     value={formData.author}
-                    onChange={(e) => setFormData({ ...formData, author: e.target.value })}
+                    onChange={(e) => setFormData({...formData, author: e.target.value})}
                 />
                 {errors.author && <p className="text-red-500 text-sm">{errors.author}</p>}
             </div>
 
             <div>
-                <Select
-                    value={formData.rating.toString()}
-                    onValueChange={(value: string) => setFormData({ ...formData, rating: parseInt(value) })}
-                >
-                    <SelectTrigger>
-                        <SelectValue placeholder="Rating" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {[1, 2, 3, 4, 5].map((rating) => (
-                            <SelectItem key={rating} value={rating.toString()}>
-                                {rating} Star{rating !== 1 ? 's' : ''}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-                {errors.rating && <p className="text-red-500 text-sm">{errors.rating}</p>}
+                <label className="block mb-2 text-sm font-medium">Rating</label>
+                <StarRating
+                    value={formData.rating}
+                    onChange={(rating) => setFormData({...formData, rating})}
+                    error={errors.rating}
+                />
             </div>
 
             <div>
@@ -113,7 +103,7 @@ const ReviewForm: React.FC<{
                     placeholder="Your Review"
                     value={formData.review}
                     rows={5}
-                    onChange={(e) => setFormData({ ...formData, review: e.target.value })}
+                    onChange={(e) => setFormData({...formData, review: e.target.value})}
                 />
                 {errors.review && <p className="text-red-500 text-sm">{errors.review}</p>}
             </div>
