@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Check, X } from "lucide-react";
 import StarRating from "@/components/starRating.tsx";
+import { UserMessages } from "@/constants.ts";
 
 const ReviewForm: React.FC<{
     review?: BookReview;
@@ -34,19 +35,19 @@ const ReviewForm: React.FC<{
         };
 
         if (!formData.book_title) {
-            newErrors.book_title = 'Book title is required.';
+            newErrors.book_title = UserMessages.TITLE_REQUIRED;
         }
 
         if (!formData.author) {
-            newErrors.author = 'Author name is required.';
+            newErrors.author = UserMessages.AUTHOR_REQUIRED;
         }
 
         if (!formData.rating || formData.rating < 1 || formData.rating > 5) {
-            newErrors.rating = 'Please provide a rating between 1 and 5.';
+            newErrors.rating = UserMessages.RATING_REQUIRED;
         }
 
         if (!formData.review) {
-            newErrors.review = 'Review cannot be empty.';
+            newErrors.review = UserMessages.REVIEW_REQUIRED;
         }
 
         setErrors(newErrors);
@@ -57,7 +58,7 @@ const ReviewForm: React.FC<{
         e.preventDefault();
 
         if (!validate()) {
-            return; // Exit if validation fails
+            return;
         }
 
         onSubmit({

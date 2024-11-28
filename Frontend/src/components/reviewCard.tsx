@@ -12,6 +12,9 @@ import {
     DialogTitle
 } from "@/components/ui/dialog.tsx";
 import { getReview } from "@/services/reviewService.ts";
+import { UserMessages } from "@/constants.ts";
+import { toast } from "@/hooks/use-toast.ts";
+import { cn } from "@/lib/utils.ts";
 
 const ReviewCard: React.FC<{
     review: BookReview,
@@ -39,6 +42,14 @@ const ReviewCard: React.FC<{
         getReview(+review.id!).then((data) => {
             setSelectedReview(data);
             setIsViewModalOpen(true);
+        }).catch(_ => {
+            toast({
+                title: "Error",
+                description: UserMessages.ERROR_FETCHING_REVIEW,
+                className: cn(
+                    'top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4 text-red-700'
+                ),
+            })
         })
     }
 
@@ -102,7 +113,7 @@ const ReviewCard: React.FC<{
                     <DialogHeader>
                         <DialogTitle>Confirm Deletion</DialogTitle>
                     </DialogHeader>
-                    <p>Are you sure you want to delete this review?</p>
+                    <p>{UserMessages.CONFIRM_DELETE_REVIEW}</p>
                     <DialogFooter>
                         <Button variant="outline" onClick={() => setIsConfirmModalOpen(false)}>
                             <X className="h-4 w-4"></X>
@@ -140,7 +151,6 @@ const ReviewCard: React.FC<{
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
-
         </Card>
     );
 };
