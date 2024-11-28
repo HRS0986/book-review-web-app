@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
+from starlette.middleware.cors import CORSMiddleware
 
 from .schema import Review, ReviewResponse
 from . import crud
@@ -8,6 +9,14 @@ from .database import get_db, create_tables
 create_tables()
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/reviews", response_model=list[ReviewResponse], status_code=200)
 def get_reviews(db: Session = Depends(get_db)):
