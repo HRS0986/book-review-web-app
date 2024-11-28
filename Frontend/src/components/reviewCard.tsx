@@ -18,7 +18,7 @@ const ReviewCard: React.FC<{ review: BookReview, onDelete: (id: string) => void,
     return (
         <Card className="mb-4">
             <CardHeader className="flex flex-row justify-between items-center">
-                <CardTitle>{review.bookTitle}</CardTitle>
+                <CardTitle>{review.book_title}</CardTitle>
                 <div className="flex space-x-2">
                     <TooltipProvider>
                         <Tooltip>

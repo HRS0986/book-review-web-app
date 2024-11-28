@@ -10,15 +10,15 @@ const ReviewForm: React.FC<{
     onCloseModal: () => void;
 }> = ({ review, onSubmit, onCloseModal }) => {
     const [formData, setFormData] = useState<BookReview>({
-        bookTitle: review?.bookTitle || '',
+        book_title: review?.book_title || '',
         author: review?.author || '',
         rating: review?.rating || 0,
         review: review?.review || '',
-        addedDate: review?.addedDate || new Date()
+        date_added: review?.addedDate || new Date()
     });
 
     const [errors, setErrors] = useState({
-        bookTitle: '',
+        book_title: '',
         author: '',
         rating: '',
         review: '',
@@ -26,14 +26,14 @@ const ReviewForm: React.FC<{
 
     const validate = () => {
         const newErrors: typeof errors = {
-            bookTitle: '',
+            book_title: '',
             author: '',
             rating: '',
             review: '',
         };
 
-        if (!formData.bookTitle) {
-            newErrors.bookTitle = 'Book title is required.';
+        if (!formData.book_title) {
+            newErrors.book_title = 'Book title is required.';
         }
 
         if (!formData.author) {
@@ -71,11 +71,11 @@ const ReviewForm: React.FC<{
             <div>
                 <Input
                     placeholder="Book Title"
-                    value={formData.bookTitle}
-                    onChange={(e) => setFormData({ ...formData, bookTitle: e.target.value })}
+                    value={formData.book_title}
+                    onChange={(e) => setFormData({ ...formData, book_title: e.target.value })}
                 />
 
-                {errors.bookTitle && <p className="text-red-500 text-sm">{errors.bookTitle}</p>}
+                {errors.book_title && <p className="text-red-500 text-sm">{errors.book_title}</p>}
             </div>
 
             <div>

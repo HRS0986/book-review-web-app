@@ -2,10 +2,9 @@ import { BookReview } from "@/types";
 import axios from 'axios';
 
 
-
 /* Set up the axios instance with the backend API base URL */
 const api = axios.create({
-    baseURL: 'https://localhost:8000/',
+    baseURL: 'http://localhost:8000/',
     headers: {
         'Content-Type': 'application/json',
     },
@@ -24,7 +23,16 @@ export const addReview = async (newReview: BookReview) => {
 export const getReviews = async () => {
     try {
         const response = await api.get('/reviews');
-        return response.data;
+        const reviews = [];
+        for (const review of response.data) {
+            console.log(review.date_added)
+            reviews.push({
+                ...review,
+                date_added: new Date(review.date_added),
+            })
+        }
+        console.log(reviews)
+        return reviews;
     } catch (error) {
         console.error('Error fetching reviews:', error);
         throw error;

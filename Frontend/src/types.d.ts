@@ -1,8 +1,8 @@
 export interface BookReview {
     id?: string;
-    bookTitle: string;
+    book_title: string;
     author: string;
     rating: number;
     review: string;
-    addedDate: Date;
+    date_added: Date;
 }
