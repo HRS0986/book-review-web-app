@@ -2,7 +2,7 @@ import { BookReview } from "@/types";
 import axios from 'axios';
 
 
-/* Set up the axios instance with the backend API base URL */
+/* axios instance with base URL */
 const api = axios.create({
     baseURL: 'http://localhost:8000/',
     headers: {
