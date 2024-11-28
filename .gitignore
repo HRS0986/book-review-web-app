@@ -1,5 +1,6 @@
 .idea
 .code
 Backend/venv
+Backend/app/__pycache__
 Frontend/node_modules
 Frontend/.vite
