@@ -3,6 +3,7 @@ import { BookReview } from "@/types";
 import { Input } from "@/components/ui/input.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
 import { Button } from "@/components/ui/button.tsx";
+import { Check, X } from "lucide-react";
 
 const ReviewForm: React.FC<{
     review?: BookReview;
@@ -14,7 +15,7 @@ const ReviewForm: React.FC<{
         author: review?.author || '',
         rating: review?.rating || 0,
         review: review?.review || '',
-        date_added: review?.addedDate || new Date()
+        date_added: review?.date_added || new Date()
     });
 
     const [errors, setErrors] = useState({
@@ -119,9 +120,13 @@ const ReviewForm: React.FC<{
 
             <div className="w-full gap-2 flex justify-end">
                 <Button type="button" variant="outline" onClick={onCloseModal}>
+                    <X className="h-4 w-4"></X>
                     Cancel
                 </Button>
-                <Button type="submit">Save Review</Button>
+                <Button type="submit">
+                    <Check className="h-4 w-4"></Check>
+                    Save Review
+                </Button>
             </div>
         </form>
     );
