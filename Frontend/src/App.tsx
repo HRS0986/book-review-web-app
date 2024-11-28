@@ -83,10 +83,10 @@ const BookReviewApp: React.FC = () => {
         <div className="min-h-screen">
             <div className="container mx-auto px-4 md:px-8 lg:px-16 xl:px-32">
                 <div className="header-toolbar sticky top-0 z-50 bg-white backdrop-blur-md rounded-md mb-5">
-                    <h1 className="text-4xl md:text-6xl lg:text-8xl font-bold mb-6 text-center">BOOK REVIEW HUB</h1>
+                    <h1 className="text-4xl md:text-6xl lg:text-8xl font-bold mb-6 text-center">BOOKS REVIEW HUB</h1>
 
                     {/* Toolbar */}
-                    <div className="bg-gray-100 rounded-md p-4 md:p-5 mb-6">
+                    <div className="bg-gray-100 rounded-b-md p-4 md:p-5 mb-6">
                         <div className="flex flex-col md:flex-row gap-4 items-center">
                             <div className="w-full md:flex-grow relative">
                                 <Input

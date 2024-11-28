@@ -28,7 +28,7 @@ def get_reviews(db: Session) -> List[Type[ReviewEntity]]:
         Review.book_title,
         Review.author,
         Review.date_added,
-        func.substring(Review.review, 1, 150).label('review')
+        func.substring(Review.review, 1, 155).label('review')
     )
     return result.all()
 
